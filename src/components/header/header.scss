@@ -1,0 +1,112 @@
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: red;
+  padding: 0 1rem;
+  height: 5rem;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  .link {
+    cursor: pointer;
+    text-decoration: none;
+  }
+  .logo {
+    // display: flex;
+    // flex-wrap: wrap;
+    // align-items: flex-end;
+    .first {
+      color:#2f2f2f;
+      font-size: 2.5rem;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+    .second {
+      color: #161616;
+      font-size: 2rem;
+      font-weight: 400;
+      text-transform: uppercase;
+    }
+    @media (max-width: ($tablet-landscape)) {
+      .first {
+        font-size: 2rem;
+      }
+      .second {
+        font-size: 1.5rem;
+      }
+    }
+    @media (max-width: ($tablet-portrait)) {
+      .first {
+        font-size: 1.25rem;
+      }
+      .second {
+        font-size: .75rem;
+      }
+    }
+    @media (max-width: ($mobile)) {
+      .first {
+        font-size: 1rem;
+      }
+      .second {
+        font-size: .5rem;
+      }
+    }
+  }
+  form {
+    background-color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem 0.3rem;
+    border-radius: 2px;
+    width: 15rem;
+    margin-left: 1rem;
+    margin-right: 1rem;
+    @media (max-width: ($tablet-landscape)) {
+      width: 13rem;
+    }
+    @media (max-width: ($tablet-portrait)) {
+      width: 11rem;
+    }
+    .nav-input {
+      border: none;
+      &:active, &:focus {
+        outline: none;
+      }
+    }
+    .search-icon {
+      color: black;
+      cursor: pointer;
+      &:hover {
+        color: #838383;
+      }
+    }
+  }
+  .nav {
+    display: flex;
+    gap: 1rem;
+    .link {
+      cursor: pointer;
+      text-decoration: none;
+      color: rgb(43, 43, 43);
+      &:hover {
+        color: #424242;
+      }
+    }
+    @media (max-width: $tablet-portrait) {
+      .about, .sign-in {
+        font-size: 1rem;
+      }
+      .about {
+        display: none;
+      }
+    }
+    @media (max-width: $mobile) {
+      .about {
+        display: none;
+      }
+      .sign-in {
+        font-size: 1rem;
+      }
+    }
+  }
+}
