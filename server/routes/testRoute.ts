@@ -1,10 +1,8 @@
 import express from "express"
-import { testHome, testUsers } from "../controllers/testControllers"
+import { testHome, testUsers } from "../controllers/testController"
 
-// define router
 const router = express.Router()
 
-// router get
 router.get("/", testHome)
 router.get("/users", testUsers)
 
