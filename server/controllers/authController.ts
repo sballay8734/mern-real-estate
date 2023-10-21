@@ -1,13 +1,17 @@
 // get username, email and password from request
 // hash password
 // create new user and save
-// send response status back & response to user
+// use middleware to send response status back & response to user & handle errors
 
-import { Request, Response } from "express"
+import { Request, Response, NextFunction } from "express"
 import User from "../models/User"
 import bcrypt from "bcrypt"
 
-export const signup = async (req: Request, res: Response) => {
+export const signup = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   const { username, email, password } = req.body
   const hashedPassword = bcrypt.hashSync(password, 10)
   try {
@@ -15,12 +19,7 @@ export const signup = async (req: Request, res: Response) => {
     await newUser.save()
     res.status(201).json({ message: "User created successfully!" })
   } catch (error) {
-    // 500 is server error
-    if (error instanceof Error) {
-      res.status(500).json(error.message)
-    } else {
-      res.status(500).json("An unexpected error occurred")
-    }
+    next(error)
   }
 
   console.log(req.body)
