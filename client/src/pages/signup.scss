@@ -1,0 +1,54 @@
+.sign-up {
+  margin: 0 auto;
+  padding: 1rem;
+  max-width: 500px;
+}
+
+.sign-up-header {
+  font-size: 2.5rem;
+  text-align: center;
+  margin: 1rem auto;
+  color: black;
+}
+
+.sign-up-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  input {
+    padding: .7rem .5rem;
+    border: 1px solid black;
+    border-radius: 5px;
+    &:focus {
+      outline: none;
+    }
+  }
+  .sign-up-button {
+    background-color: rgb(31, 39, 74);
+    color: white;
+    border: none;
+    padding: .7rem .5rem;
+    border-radius: 5px;
+    &:hover {
+      cursor: pointer;
+      opacity: .95;
+    }
+    &:disabled {
+      opacity: .8;
+    }
+  }
+}
+
+.sign-in-prompt {
+  display: flex;
+  color: black;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+  a {
+    text-decoration: none;
+  }
+  p {
+    margin: 0;
+  }
+}
