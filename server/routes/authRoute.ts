@@ -1,44 +1,8 @@
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-// import express from "express"
-// import { signup } from "../controllers/authController"
+import express from "express"
+import { signup } from "../controllers/authController"
 
-// const router = express.Router()
+const router = express.Router()
 
-// router.post("/", signup)
+router.post("/signup", signup)
 
-// export default router
+export default router
