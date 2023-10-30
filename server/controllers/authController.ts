@@ -7,7 +7,6 @@ export const signup = async (
   res: Response,
   next: NextFunction
 ) => {
-  console.log("Request Body:", req.body)
   const { username, email, password } = req.body
   // data validation would go here!
   if (!username || !email || !password) {
@@ -22,7 +21,6 @@ export const signup = async (
     await newUser.save()
     res.status(201).json({ message: "User created successfully!" })
   } catch (error) {
-    // res.status(500).send(error)
     next(error)
   }
 }
