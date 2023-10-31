@@ -86,7 +86,7 @@ export default function SignUp() {
         </button>
       </form>
       <div className="sign-in-prompt">
-        <p>Have an account?</p>
+        <p>Already have an account?</p>
         <Link to={"/sign-in"}>Sign in</Link>
       </div>
       {error && <p className="error-message">{error}</p>}

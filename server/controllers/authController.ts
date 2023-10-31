@@ -44,10 +44,13 @@ export const signin = async (
     const userObject = validUser.toObject()
     const { password: pass, ...rest } = userObject
 
-    res.cookie("access_token", token, {
-      expires: new Date(Date.now() + 24 * 60 * 60 * 1000 * 10),
-      httpOnly: true
-    })
+    res
+      .cookie("access_token", token, {
+        expires: new Date(Date.now() + 24 * 60 * 60 * 1000 * 10),
+        httpOnly: true
+      })
+      .status(201)
+      .json(rest)
   } catch (error) {
     next(error)
   }
