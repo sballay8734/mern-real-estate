@@ -11,5 +11,6 @@ export const store = configureStore({
     })
 })
 
+// ask chatgpt why rootstate needs ReturnType and appdispatch doesnt
 export type RootState = ReturnType<typeof store.getState>
 export type AppDispatch = typeof store.dispatch

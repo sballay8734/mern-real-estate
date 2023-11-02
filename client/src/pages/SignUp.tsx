@@ -4,13 +4,17 @@ import { useState } from "react"
 import "./signup.scss"
 
 interface formData {
-  username?: string
-  email?: string
-  password?: string
+  username: string
+  email: string
+  password: string
 }
 
 export default function SignUp() {
-  const [formData, setFormData] = useState<formData>({})
+  const [formData, setFormData] = useState<formData>({
+    username: "",
+    email: "",
+    password: ""
+  })
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState<boolean>(false)
   const navigate = useNavigate()
@@ -23,11 +27,9 @@ export default function SignUp() {
   }
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-    console.log("Called")
     e.preventDefault()
-    setLoading(true)
-
     try {
+      setLoading(true)
       const requestOptions: RequestInit = {
         method: "POST",
         headers: {
@@ -50,7 +52,6 @@ export default function SignUp() {
       if (error instanceof Error) {
         setLoading(false)
         setError(error.message)
-        console.log("Catch Block Working")
       }
     }
   }
