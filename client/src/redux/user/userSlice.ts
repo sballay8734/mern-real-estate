@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit"
+import { PayloadAction, createSlice } from "@reduxjs/toolkit"
 // import type { PayloadAction } from "@reduxjs/toolkit";
 // import type { RootState } from "../store";
 
@@ -27,9 +27,22 @@ export const userSlice = createSlice({
   initialState,
   reducers: {
     // signInStart
+    signInStart: (state) => {
+      state.loading = true
+    },
     // signInSuccess
+    signInSuccess: (state, action: PayloadAction<User>) => {
+      state.currentUser = action.payload
+      state.loading = false
+      state.error = null
+    },
     // signInFailure
+    signInFailure: (state, action: PayloadAction<string>) => {
+      state.error = action.payload
+      state.loading = false
+    }
   }
 })
 
+export const { signInStart, signInSuccess, signInFailure } = userSlice.actions
 export default userSlice.reducer

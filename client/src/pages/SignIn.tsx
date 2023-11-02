@@ -1,18 +1,29 @@
-import { Link, useNavigate } from "react-router-dom"
+import { Link, useNavigate, NavigateFunction } from "react-router-dom"
+import { useDispatch, useSelector } from "react-redux"
 import { useState } from "react"
+
+import {
+  signInStart,
+  signInSuccess,
+  signInFailure
+} from "../redux/user/userSlice"
+import type { AppDispatch, RootState } from "../redux/store"
+
 import "./signin.scss"
 
 interface formData {
-  username?: string
-  email?: string
-  password?: string
+  email: string
+  password: string
 }
 
 export default function SignIn() {
-  const [formData, setFormData] = useState<formData>({})
-  const [error, setError] = useState<string | null>(null)
-  const [loading, setLoading] = useState<boolean>(false)
-  const navigate = useNavigate()
+  const [formData, setFormData] = useState<formData>({
+    email: "",
+    password: ""
+  })
+  const { error, loading } = useSelector((state: RootState) => state.user)
+  const navigate: NavigateFunction = useNavigate()
+  const dispatch = useDispatch<AppDispatch>()
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     setFormData({
@@ -23,9 +34,8 @@ export default function SignIn() {
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
-    setLoading(true)
-
     try {
+      dispatch(signInStart())
       const requestOptions: RequestInit = {
         method: "POST",
         headers: {
@@ -37,17 +47,14 @@ export default function SignIn() {
       const res = await fetch("/api/auth/signin", requestOptions)
       const data = await res.json()
       if (data.success === false) {
-        setLoading(false)
-        setError(data.message)
+        dispatch(signInFailure(data.message))
         return
       }
-      setLoading(false)
-      setError(null)
+      dispatch(signInSuccess(data))
       navigate("/")
     } catch (error) {
       if (error instanceof Error) {
-        setLoading(false)
-        setError(error.message)
+        dispatch(signInFailure(error.message))
         console.log("Catch Block Working")
       }
     }
