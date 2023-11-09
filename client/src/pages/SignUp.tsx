@@ -2,6 +2,7 @@
 import { Link, useNavigate } from "react-router-dom"
 import { useState } from "react"
 import "./signup.scss"
+import OAuth from "../components/OAuth/OAuth"
 
 interface formData {
   username: string
@@ -85,6 +86,7 @@ export default function SignUp() {
         <button disabled={loading} className="sign-up-button">
           {loading ? "Loading..." : "Sign up"}
         </button>
+        <OAuth />
       </form>
       <div className="sign-in-prompt">
         <p>Already have an account?</p>

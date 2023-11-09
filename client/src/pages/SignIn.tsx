@@ -8,7 +8,7 @@ import {
   signInFailure
 } from "../redux/user/userSlice"
 import type { AppDispatch, RootState } from "../redux/store"
-
+import OAuth from "../components/OAuth/OAuth"
 import "./signin.scss"
 
 interface formData {
@@ -81,6 +81,7 @@ export default function SignIn() {
         <button disabled={loading} className="sign-up-button">
           {loading ? "Loading..." : "Sign in"}
         </button>
+        <OAuth />
       </form>
       <div className="sign-in-prompt">
         <p>Don't have an account?</p>
