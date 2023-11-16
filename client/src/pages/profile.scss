@@ -1,0 +1,48 @@
+.profile-page {
+  max-width: 600px;
+  padding: 1rem;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  .profile-header {
+    text-align: center;
+  }
+  form {
+    display: flex;
+    gap: 0.7rem;
+    flex-direction: column;
+    align-items: center;
+    img {
+      border-radius: 100%;
+      height: 4rem;
+      width: 4rem;
+      margin-bottom: 1rem;
+    }
+    input {
+      min-width: 300px;
+      padding: 0.6rem 0.3rem;
+      border-radius: 5px;
+      border: 1px solid transparent;
+    }
+    button {
+      width: 100%;
+      padding: 0.6rem 0.3rem;
+      background-color: rgb(50, 50, 97);
+      color: white;
+      border: 1px solid transparent;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .account-management {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      span {
+        font-size: 0.8rem;
+        cursor: pointer;
+        color: rgb(202, 0, 0);
+      }
+    }
+  }
+}
