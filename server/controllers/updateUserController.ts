@@ -9,7 +9,7 @@ export const updateUser = async (
   next: NextFunction
 ) => {
   if (!req.user || req.user.id !== req.params.id)
-    return next(errorHandler(404, "You can only update your own account!"))
+    return next(errorHandler(401, "You can only update your own account!"))
 
   try {
     let hashedPassword
