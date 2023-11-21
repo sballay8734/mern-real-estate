@@ -7,17 +7,23 @@ import {
   ref,
   uploadBytesResumable
 } from "firebase/storage"
+import { useDispatch } from "react-redux"
 
 import { RootState } from "../redux/store"
 import { app } from "../firebase"
+import {
+  updateUserStart,
+  updateUserSuccess,
+  updateUserFailure
+} from "../redux/user/userSlice"
 import "./profile.scss"
 
 interface FormData {
-  username: string
-  email: string
-  password: string
-  passwordConfirm: string
-  avatar: string
+  username?: string
+  email?: string
+  password?: string
+  passwordConfirm?: string
+  avatar?: string
 }
 
 export default function Profile() {
@@ -32,13 +38,8 @@ export default function Profile() {
   const [file, setFile] = useState<File | null>(null)
   const [filePct, setFilePct] = useState<number>(0)
   const [fileUploadError, setFileUploadError] = useState<string | null>(null)
-  const [formData, setFormData] = useState<FormData>({
-    username: "",
-    email: "",
-    password: "",
-    passwordConfirm: "",
-    avatar: ""
-  })
+  const [formData, setFormData] = useState<FormData>({})
+  const dispatch = useDispatch()
 
   useEffect(() => {
     if (file) {
@@ -85,10 +86,43 @@ export default function Profile() {
     setFile(null)
   }
 
+  function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
+    setFormData({
+      ...formData,
+      [e.target.id]: e.target.value
+    })
+  }
+
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault()
+
+    try {
+      dispatch(updateUserStart())
+      const response = await fetch(`/api/profile/update/${currentUser?._id}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(formData)
+      })
+      const data = await response.json()
+
+      if (data.success === false) {
+        dispatch(updateUserFailure(data.message))
+        return
+      }
+      dispatch(updateUserSuccess(data))
+    } catch (error) {
+      if (error instanceof Error) {
+        dispatch(updateUserFailure(error.message))
+      }
+    }
+  }
+
   return (
     <div className="profile-page">
       <h1 className="profile-header">Profile</h1>
-      <form>
+      <form onSubmit={handleSubmit}>
         <input
           onChange={(e) => setFile(e.target.files && e.target.files[0])}
           type="file"
@@ -112,10 +146,30 @@ export default function Profile() {
             ""
           )}
         </p>
-        <input type="text" id="username" placeholder="username" />
-        <input type="text" id="email" placeholder="email" />
-        <input type="text" id="password" placeholder="new password" />
-        <input type="text" id="confirm" placeholder="confirm new password" />
+        <input
+          onChange={handleChange}
+          type="text"
+          id="username"
+          placeholder="username"
+        />
+        <input
+          onChange={handleChange}
+          type="text"
+          id="email"
+          placeholder="email"
+        />
+        <input
+          onChange={handleChange}
+          type="password"
+          id="password"
+          placeholder="new password"
+        />
+        <input
+          onChange={handleChange}
+          type="password"
+          id="passwordConfirm"
+          placeholder="confirm new password"
+        />
         <button>Update</button>
         <div className="account-management">
           <span>Delete account</span>
