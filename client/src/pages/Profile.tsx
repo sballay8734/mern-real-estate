@@ -14,7 +14,10 @@ import { app } from "../firebase"
 import {
   updateUserStart,
   updateUserSuccess,
-  updateUserFailure
+  updateUserFailure,
+  deleteUserStart,
+  deleteUserFailure,
+  deleteUserSuccess
 } from "../redux/user/userSlice"
 import "./profile.scss"
 
@@ -138,6 +141,30 @@ export default function Profile() {
     }
   }
 
+  async function handleDeleteUser() {
+    dispatch(deleteUserStart())
+    try {
+      const res = await fetch(`api/profile/delete/${currentUser?._id}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json"
+        }
+      })
+
+      const data = await res.json()
+      if (data.success === false) {
+        dispatch(deleteUserFailure(data.message))
+        return
+      }
+      dispatch(deleteUserSuccess())
+    } catch (error) {
+      if (error instanceof Error) {
+        dispatch(deleteUserFailure(error.message))
+      }
+      console.log(error)
+    }
+  }
+
   return (
     <div className="profile-page">
       <h1 className="profile-header">Profile</h1>
@@ -196,7 +223,7 @@ export default function Profile() {
         />
         <button disabled={loading}>{loading ? "Loading..." : "Update"}</button>
         <div className="account-management">
-          <span>Delete account</span>
+          <span onClick={handleDeleteUser}>Delete account</span>
           <span>Sign out</span>
         </div>
         <p className="error">{error ? error : ""}</p>
