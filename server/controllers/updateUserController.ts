@@ -13,6 +13,13 @@ export const updateUser = async (
   }
 
   try {
+    let newEmail
+    if (req.body.email === "") {
+      newEmail = req.user.email
+    } else {
+      newEmail = req.body.email
+    }
+
     let hashedPassword
 
     if (req.body.password) {
@@ -23,7 +30,7 @@ export const updateUser = async (
       {
         $set: {
           username: req.body.username,
-          email: req.body.email,
+          email: newEmail,
           password: hashedPassword,
           avatar: req.body.avatar
         }

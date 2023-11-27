@@ -33,12 +33,15 @@ export default function Profile() {
   // request.resource.size < 2 * 1024 * 1024 &&
   // request.resource.contentType.matches("image/.*")
 
-  const { currentUser } = useSelector((state: RootState) => state.user)
+  const { currentUser, loading, error } = useSelector(
+    (state: RootState) => state.user
+  )
   const fileRef = useRef<HTMLInputElement | null>(null)
   const [file, setFile] = useState<File | null>(null)
   const [filePct, setFilePct] = useState<number>(0)
   const [fileUploadError, setFileUploadError] = useState<string | null>(null)
   const [formData, setFormData] = useState<FormData>({})
+  const [updateSuccess, setUpdateSuccess] = useState(false)
   const dispatch = useDispatch()
 
   useEffect(() => {
@@ -80,6 +83,8 @@ export default function Profile() {
       () => {
         getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
           setFormData({ ...formData, avatar: downloadURL })
+          setFileUploadError(null)
+          setFilePct(0)
         })
       }
     )
@@ -96,7 +101,20 @@ export default function Profile() {
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
 
+    if (formData.password || formData.passwordConfirm) {
+      if (formData.password !== formData.passwordConfirm) {
+        dispatch(updateUserFailure("Passwords must match"))
+        return
+      }
+    }
+
+    if (formData.email && formData.email.trim() === "") {
+      dispatch(updateUserFailure("Not a valid email address"))
+      return
+    }
+
     try {
+      setUpdateSuccess(false)
       dispatch(updateUserStart())
       const response = await fetch(`/api/profile/update/${currentUser?._id}`, {
         method: "POST",
@@ -112,6 +130,7 @@ export default function Profile() {
         return
       }
       dispatch(updateUserSuccess(data))
+      setUpdateSuccess(true)
     } catch (error) {
       if (error instanceof Error) {
         dispatch(updateUserFailure(error.message))
@@ -151,30 +170,39 @@ export default function Profile() {
           type="text"
           id="username"
           placeholder="username"
+          minLength={3}
+          maxLength={15}
         />
         <input
           onChange={handleChange}
-          type="text"
+          type="email"
           id="email"
           placeholder="email"
+          minLength={5}
         />
         <input
           onChange={handleChange}
           type="password"
           id="password"
           placeholder="new password"
+          minLength={8}
         />
         <input
           onChange={handleChange}
           type="password"
           id="passwordConfirm"
           placeholder="confirm new password"
+          minLength={8}
         />
-        <button>Update</button>
+        <button disabled={loading}>{loading ? "Loading..." : "Update"}</button>
         <div className="account-management">
           <span>Delete account</span>
           <span>Sign out</span>
         </div>
+        <p className="error">{error ? error : ""}</p>
+        <p className="success">
+          {updateSuccess ? "User updated successfully" : ""}
+        </p>
       </form>
     </div>
   )
