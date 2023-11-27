@@ -1,6 +1,7 @@
 // import React from 'react'
 import { useSelector } from "react-redux"
 import { useEffect, useRef, useState } from "react"
+import { Link } from "react-router-dom"
 import {
   getDownloadURL,
   getStorage,
@@ -239,6 +240,9 @@ export default function Profile() {
           minLength={8}
         />
         <button disabled={loading}>{loading ? "Loading..." : "Update"}</button>
+        <Link className="create-listing" to="/create-listing">
+          Create Listing
+        </Link>
         <div className="account-management">
           <span onClick={handleDeleteUser}>Delete account</span>
           <span onClick={handleSignOutUser}>Sign out</span>
