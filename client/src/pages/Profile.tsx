@@ -17,7 +17,10 @@ import {
   updateUserFailure,
   deleteUserStart,
   deleteUserFailure,
-  deleteUserSuccess
+  deleteUserSuccess,
+  signOutUserStart,
+  signOutUserFailure,
+  signOutUserSuccess
 } from "../redux/user/userSlice"
 import "./profile.scss"
 
@@ -165,6 +168,26 @@ export default function Profile() {
     }
   }
 
+  async function handleSignOutUser() {
+    dispatch(signOutUserStart())
+    try {
+      // default is GET so no need to specify
+      const res = await fetch("api/auth/signout")
+
+      const data = await res.json()
+      if (data.success === false) {
+        dispatch(signOutUserFailure(data.message))
+        return
+      }
+      dispatch(signOutUserSuccess())
+    } catch (error) {
+      if (error instanceof Error) {
+        dispatch(signOutUserFailure(error.message))
+      }
+      console.log(error)
+    }
+  }
+
   return (
     <div className="profile-page">
       <h1 className="profile-header">Profile</h1>
@@ -224,7 +247,7 @@ export default function Profile() {
         <button disabled={loading}>{loading ? "Loading..." : "Update"}</button>
         <div className="account-management">
           <span onClick={handleDeleteUser}>Delete account</span>
-          <span>Sign out</span>
+          <span onClick={handleSignOutUser}>Sign out</span>
         </div>
         <p className="error">{error ? error : ""}</p>
         <p className="success">
