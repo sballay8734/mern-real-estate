@@ -33,12 +33,6 @@ interface FormData {
 }
 
 export default function Profile() {
-  // firebase storage setup (size === 2,097,152 bytes)
-  // allow read;
-  // allow write: if
-  // request.resource.size < 2 * 1024 * 1024 &&
-  // request.resource.contentType.matches("image/.*")
-
   const { currentUser, loading, error } = useSelector(
     (state: RootState) => state.user
   )
