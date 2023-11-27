@@ -1,9 +1,20 @@
-// CREATE LISTING MODEL WITH
-//    - name, description, address, regPrice, discountPrice, bathrooms, furnished, parking, type, offer, imgUrls, userRef, timestamps(true)
-
 import mongoose, { Document, Schema } from "mongoose"
 
-interface Listing extends Document {}
+interface IListing extends Document {
+  name: string
+  description: string
+  address: string
+  regPrice: number
+  discountPrice: number
+  bathrooms: number
+  bedrooms: number
+  furnished: boolean
+  parking: boolean
+  type: string
+  offer: boolean
+  imgUrls: string[]
+  userRef: string
+}
 
 const listingSchema = new mongoose.Schema(
   {
@@ -18,12 +29,12 @@ const listingSchema = new mongoose.Schema(
     parking: { type: Boolean, required: true },
     type: { type: String, required: true },
     offer: { type: Boolean, required: true },
-    imageUrls: { type: Array, required: true },
+    imgUrls: { type: Array, required: true },
     userRef: { type: String, required: true }
   },
   { timestamps: true }
 )
 
-const Listing = mongoose.model("Listing", listingSchema)
+const Listing = mongoose.model<IListing>("Listing", listingSchema)
 
 export default Listing
