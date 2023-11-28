@@ -2,15 +2,131 @@ main {
   display: flex;
   flex-direction: column;
   align-items: center;
+  width: 100%;
   .listing-form {
+    display: flex;
+    flex-direction: column;
+    width: 90%;
+    max-width: 800px;
+    gap: 1.5rem;
+    @media screen and (min-width: 700px) {
+      flex-direction: row;
+    }
     .listing-inputs {
       display: flex;
       flex-direction: column;
-      gap: 0.5rem;
+      gap: 0.7rem;
+      width: 100%;
       #name, #address, #description {
         padding: 0.4rem 0.3rem;
         font-size: 0.7rem;
         border: 1px solid transparent;
+      }
+      .check-boxes {
+        display: flex;
+        gap: 0.7rem;
+        flex-wrap: wrap;
+        .check-box {
+          display: flex;
+          align-items: center;
+          gap: 0.1rem;
+          font-size: 0.8rem;
+          input, label {
+            cursor: pointer;
+          }
+        }
+      }
+      .number-inputs {
+        display: flex;
+        gap: 0.7rem;
+        flex-wrap: wrap;
+        .number-input {
+          display: flex;
+          align-items: center;
+          gap: 0.3rem;
+          font-size: 0.8rem;
+          &.hide {
+            display: none;
+          }
+          input {
+            padding: 0.4rem 0.2rem 0.4rem 0.4rem;
+            width: 50px;
+            border-radius: 3px;
+            border: 1px solid transparent;
+          }
+          #regPrice, #discountPrice {
+            width: 100px;
+          }
+          .price-description {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            .per-month {
+              font-size: 0.5rem;
+
+            }
+          }
+        }
+      }
+    }
+    .uploadImgs-submit {
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+      width: 100%;
+      .images-bold {
+        font-weight: bold;
+        font-size: 0.9rem;
+        span {
+          font-weight: 400;
+          font-size: 0.8rem;
+        }
+      }
+      .image-upload {
+        display: flex;
+        gap: 1rem;
+        #images {
+          padding: 0.5rem;
+          border: 1px solid rgb(174, 174, 174);
+          border-radius: 3px;
+          display: flex;
+          align-items: center;
+          &::-webkit-file-upload-button {
+            cursor: pointer;
+            background-color: rgb(92, 31, 31);
+            color: white;
+            border: 1px solid transparent;
+            border-radius: 3px;
+            padding: 0.2rem 0.5rem;
+            &:hover {
+              opacity: 0.9;
+            }
+          }
+        }
+        button {
+          border: 1px solid transparent;
+          background-color: rgb(86, 180, 86);
+          border: 1px solid green;
+          border-radius: 3px;
+          padding: 0.5rem;
+          &:hover {
+            opacity: 0.9;
+            cursor: pointer;
+          }
+        }
+      }
+      .create-listing-button {
+        margin-top: 0.5rem;
+        width: 100%;
+        padding: 0.6rem 0.5rem;
+        cursor: pointer;
+        background-color: rgb(55, 55, 84);
+        color: white;    
+        border: 1px solid transparent;
+        border-radius: 3px;
+        &:hover {
+          opacity: 0.9;
+        }
       }
     }
   }
