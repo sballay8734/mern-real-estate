@@ -6,6 +6,14 @@ In JavaScript, when you use await with a non-promise value, it's automatically w
 This behavior is part of the language design to make it more flexible when working with asynchronous code and to maintain a consistent syntax when using await.
 */
 
+// SAVE FILE AND RECREATE HANDLE FILE UPLOAD AND STORE IMAGE FUNCTIONS
+// SAVE FILE AND RECREATE HANDLE FILE UPLOAD AND STORE IMAGE FUNCTIONS
+// SAVE FILE AND RECREATE HANDLE FILE UPLOAD AND STORE IMAGE FUNCTIONS
+// SAVE FILE AND RECREATE HANDLE FILE UPLOAD AND STORE IMAGE FUNCTIONS
+// SAVE FILE AND RECREATE HANDLE FILE UPLOAD AND STORE IMAGE FUNCTIONS
+// SAVE FILE AND RECREATE HANDLE FILE UPLOAD AND STORE IMAGE FUNCTIONS
+// SAVE FILE AND RECREATE HANDLE FILE UPLOAD AND STORE IMAGE FUNCTIONS
+
 import { useState } from "react"
 
 import {
@@ -28,18 +36,34 @@ export default function CreateListing() {
   const [formData, setFormData] = useState<FormData>({
     imgUrls: []
   })
+  const [imgUploadError, setImgUploadError] = useState<boolean | string>(false)
+
+  console.log(formData)
 
   async function handleFileUpload() {
-    if (!files || files.length < 1 || files.length > 7) return
+    setImgUploadError(false)
 
-    const promises = []
-
-    for (let i = 0; i < files.length; i++) {
-      promises.push(storeImage(files[i]))
+    if (
+      !files ||
+      files.length < 1 ||
+      files.length + formData.imgUrls.length > 6
+    ) {
+      setImgUploadError("Number of files must be more than 0 and less than 7")
+      return
     }
 
-    const urls: string[] = await Promise.all(promises)
-    setFormData({ ...formData, imgUrls: formData.imgUrls.concat(urls) })
+    try {
+      const promises = []
+
+      for (let i = 0; i < files.length; i++) {
+        promises.push(storeImage(files[i]))
+      }
+
+      const urls: string[] = await Promise.all(promises)
+      setFormData({ ...formData, imgUrls: [...formData.imgUrls, ...urls] })
+    } catch (error) {
+      setImgUploadError("Image upload failed (2MB max per image)")
+    }
   }
 
   async function storeImage(file: File): Promise<string> {
@@ -51,6 +75,11 @@ export default function CreateListing() {
       const uploadTask = uploadBytesResumable(storageRef, file)
       uploadTask.on(
         "state_changed",
+        (snapshot) => {
+          const progress =
+            (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+          console.log(`Upload is ${progress}% done`)
+        },
         (error) => {
           reject(error)
         },
@@ -63,7 +92,6 @@ export default function CreateListing() {
     })
   }
 
-  console.log(files)
   return (
     <main>
       <h1 className="create-listing-header">Create a Listing</h1>
@@ -161,6 +189,14 @@ export default function CreateListing() {
               Upload
             </button>
           </div>
+          <p className="error">{imgUploadError && imgUploadError}</p>
+          {formData.imgUrls.length > 0 &&
+            formData.imgUrls.map((url) => (
+              <div key={url} className="rendered-image">
+                <img src={url} alt="image" />
+                <button type="button">X</button>
+              </div>
+            ))}
           <button className="create-listing-button">CREATE LISTING</button>
         </div>
       </form>

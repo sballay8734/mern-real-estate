@@ -9,6 +9,11 @@ main {
     width: 90%;
     max-width: 800px;
     gap: 1.5rem;
+    .error {
+      color: rgb(165, 0, 0);
+      margin: 0;
+      font-size: 0.8rem;
+    }
     @media screen and (min-width: 700px) {
       flex-direction: row;
     }
@@ -74,6 +79,15 @@ main {
       flex-direction: column;
       gap: 0.3rem;
       width: 100%;
+      .rendered-image {
+        display: flex;
+        justify-content: space-between;
+        img {
+          height: 50px;
+          width: 50px;
+          object-fit: contain;
+        }
+      }
       .images-bold {
         font-weight: bold;
         font-size: 0.9rem;
@@ -116,7 +130,6 @@ main {
         }
       }
       .create-listing-button {
-        margin-top: 0.5rem;
         width: 100%;
         padding: 0.6rem 0.5rem;
         cursor: pointer;
