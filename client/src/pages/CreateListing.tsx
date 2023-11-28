@@ -1,9 +1,52 @@
 import { useState } from "react"
 
+import {
+  getDownloadURL,
+  getStorage,
+  ref,
+  uploadBytesResumable
+} from "firebase/storage"
+import { app } from "../firebase"
+
 import "./CreateListing.scss"
 
 export default function CreateListing() {
   const [offer, setOffer] = useState<boolean>(false)
+  const [files, setFiles] = useState<File[] | null>([])
+
+  async function handleFileUpload() {
+    if (!files || files.length < 1 || files.length > 7) return
+
+    const promises = []
+
+    for (let i = 0; i < files.length; i++) {
+      const imgUrl = await storeImage(files[i])
+      promises.push(imgUrl)
+    }
+  }
+
+  async function storeImage(file: File) {
+    return new Promise((resolve, reject) => {
+      const storage = getStorage(app)
+      const fileName = new Date().getTime() + file.name
+      const storageRef = ref(storage, fileName)
+
+      const uploadTask = uploadBytesResumable(storageRef, file)
+      uploadTask.on(
+        "state_changed",
+        (error) => {
+          reject(error)
+        },
+        () => {
+          getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+            resolve(downloadURL)
+          })
+        }
+      )
+    })
+  }
+
+  console.log(files)
   return (
     <main>
       <h1 className="create-listing-header">Create a Listing</h1>
@@ -86,8 +129,20 @@ export default function CreateListing() {
             </span>
           </span>
           <div className="image-upload">
-            <input type="file" id="images" accept="image/*" multiple />
-            <button className="upload-button">Upload</button>
+            <input
+              onChange={(e) => e.target.files && setFiles([...e.target.files])}
+              type="file"
+              id="images"
+              accept="image/*"
+              multiple
+            />
+            <button
+              type="button"
+              onClick={handleFileUpload}
+              className="upload-button"
+            >
+              Upload
+            </button>
           </div>
           <button className="create-listing-button">CREATE LISTING</button>
         </div>
