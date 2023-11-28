@@ -1,3 +1,11 @@
+/* 
+The await keyword can be used with any function, not just those that return promises. However, if the function doesn't return a promise, the value is treated as a resolved promise.
+
+In JavaScript, when you use await with a non-promise value, it's automatically wrapped in a resolved promise. So, in your case, even though storeImage doesn't explicitly return a promise, using await storeImage(files[i]) in an async function is valid because it's essentially equivalent to await Promise.resolve(storeImage(files[i])).
+
+This behavior is part of the language design to make it more flexible when working with asynchronous code and to maintain a consistent syntax when using await.
+*/
+
 import { useState } from "react"
 
 import {
@@ -10,9 +18,16 @@ import { app } from "../firebase"
 
 import "./CreateListing.scss"
 
+interface FormData {
+  imgUrls: string[]
+}
+
 export default function CreateListing() {
   const [offer, setOffer] = useState<boolean>(false)
   const [files, setFiles] = useState<File[] | null>([])
+  const [formData, setFormData] = useState<FormData>({
+    imgUrls: []
+  })
 
   async function handleFileUpload() {
     if (!files || files.length < 1 || files.length > 7) return
@@ -20,12 +35,14 @@ export default function CreateListing() {
     const promises = []
 
     for (let i = 0; i < files.length; i++) {
-      const imgUrl = await storeImage(files[i])
-      promises.push(imgUrl)
+      promises.push(storeImage(files[i]))
     }
+
+    const urls: string[] = await Promise.all(promises)
+    setFormData({ ...formData, imgUrls: formData.imgUrls.concat(urls) })
   }
 
-  async function storeImage(file: File) {
+  async function storeImage(file: File): Promise<string> {
     return new Promise((resolve, reject) => {
       const storage = getStorage(app)
       const fileName = new Date().getTime() + file.name
