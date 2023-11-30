@@ -2,6 +2,7 @@ import bcrypt from "bcrypt"
 import { Request, Response, NextFunction } from "express"
 import { errorHandler } from "../utils/error"
 import User from "../models/User"
+import Listing from "../models/Listing"
 
 export const updateUser = async (
   req: Request,
@@ -62,6 +63,23 @@ export const deleteUser = async (
     await User.findByIdAndDelete(req.params.id)
     res.clearCookie("access_token")
     res.status(200).json({ message: "User has been deleted" })
+  } catch (error) {
+    next(error)
+  }
+}
+
+export const getUserListings = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  if (!req.user || req.user.id !== req.params.id) {
+    next(errorHandler(401, "Unauthorized"))
+    return
+  }
+  try {
+    const listings = await Listing.find({ userRef: req.params.id })
+    res.status(200).json(listings)
   } catch (error) {
     next(error)
   }

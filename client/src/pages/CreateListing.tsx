@@ -331,6 +331,7 @@ export default function CreateListing() {
                 min={1}
                 max={99}
                 required
+                step={0.5}
                 value={formData.bathrooms}
               />
               <label htmlFor="bathrooms">Baths</label>
