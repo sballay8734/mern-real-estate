@@ -37,12 +37,9 @@ export default function CreateListing() {
     imgUrls: []
   })
   const [imgUploadError, setImgUploadError] = useState<boolean | string>(false)
-
-  console.log(formData)
+  const [uploading, setUploading] = useState<boolean>(false)
 
   async function handleFileUpload() {
-    setImgUploadError(false)
-
     if (
       !files ||
       files.length < 1 ||
@@ -53,6 +50,9 @@ export default function CreateListing() {
     }
 
     try {
+      setUploading(true)
+      setImgUploadError(false)
+
       const promises = []
 
       for (let i = 0; i < files.length; i++) {
@@ -61,8 +61,10 @@ export default function CreateListing() {
 
       const urls: string[] = await Promise.all(promises)
       setFormData({ ...formData, imgUrls: [...formData.imgUrls, ...urls] })
+      setUploading(false)
     } catch (error) {
       setImgUploadError("Image upload failed (2MB max per image)")
+      setUploading(false)
     }
   }
 
@@ -90,6 +92,11 @@ export default function CreateListing() {
         }
       )
     })
+  }
+
+  function handleDelete(url: string) {
+    const newFormData = formData.imgUrls.filter((item) => item !== url)
+    setFormData({ ...formData, imgUrls: newFormData })
   }
 
   return (
@@ -182,11 +189,12 @@ export default function CreateListing() {
               multiple
             />
             <button
+              disabled={uploading}
               type="button"
               onClick={handleFileUpload}
               className="upload-button"
             >
-              Upload
+              {uploading ? "Uploading..." : "Upload"}
             </button>
           </div>
           <p className="error">{imgUploadError && imgUploadError}</p>
@@ -194,7 +202,9 @@ export default function CreateListing() {
             formData.imgUrls.map((url) => (
               <div key={url} className="rendered-image">
                 <img src={url} alt="image" />
-                <button type="button">X</button>
+                <button onClick={() => handleDelete(url)} type="button">
+                  DELETE
+                </button>
               </div>
             ))}
           <button className="create-listing-button">CREATE LISTING</button>
