@@ -33,6 +33,22 @@ interface FormData {
   avatar?: string
 }
 
+interface Listing {
+  name: string
+  description: string
+  address: string
+  regPrice: number
+  discountPrice: number
+  bathrooms: number
+  bedrooms: number
+  furnished: boolean
+  parking: boolean
+  type: string
+  offer: boolean
+  imgUrls: string[]
+  userRef: string
+}
+
 export default function Profile() {
   const { currentUser, loading, error } = useSelector(
     (state: RootState) => state.user
@@ -43,6 +59,7 @@ export default function Profile() {
   const [fileUploadError, setFileUploadError] = useState<string | null>(null)
   const [formData, setFormData] = useState<FormData>({})
   const [updateSuccess, setUpdateSuccess] = useState(false)
+  const [listings, setListings] = useState<Listing[]>([])
   const dispatch = useDispatch()
 
   useEffect(() => {
@@ -183,6 +200,22 @@ export default function Profile() {
     }
   }
 
+  async function handleFetchListings() {
+    try {
+      const res = await fetch(`/api/profile/listings/${currentUser?._id}`)
+      const data = await res.json()
+
+      console.log(data)
+
+      if (data.success === false) {
+        console.log("ERROR")
+      }
+      setListings(data)
+    } catch (error) {
+      console.log("error")
+    }
+  }
+
   return (
     <div className="profile-page">
       <h1 className="profile-header">Profile</h1>
@@ -252,6 +285,18 @@ export default function Profile() {
           {updateSuccess ? "User updated successfully" : ""}
         </p>
       </form>
+      <button onClick={handleFetchListings} className="view-listings">
+        View Listings
+      </button>
+      {listings.length > 0 ? (
+        <div className="listings">
+          {listings.map((item, index) => (
+            <div key={index}>{item.name}</div>
+          ))}
+        </div>
+      ) : (
+        ""
+      )}
     </div>
   )
 }
